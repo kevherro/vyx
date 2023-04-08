@@ -8,7 +8,7 @@ on:
       - master
 env:
   GOPATH: ${{ github.workspace }}
-  WORKING_DIR: ./src/github.com/kevherro/bob/
+  WORKING_DIR: ./src/github.com/kevherro/vyx/
 jobs:
   test-mac:
     runs-on: ${{ matrix.os }}
