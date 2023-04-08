@@ -1,4 +1,5 @@
 [![Github Action CI](https://github.com/kevherro/vyx/workflows/ci/badge.svg)](https://github.com/kevherro/vyx/actions)
+[![Go Reference](https://pkg.go.dev/badge/github.com/kevherro/vyx.svg)](https://pkg.go.dev/github.com/kevherro/vyx)
 
 # Introduction
 
