@@ -10,6 +10,8 @@ Prerequisites:
   Follow [these instructions](http://golang.org/doc/code.html) to prepare
   the environment.
 
+- OpenAI API key. Set it as an environment variable named `OPENAI_API_KEY`.
+
 To build and install it:
 
     go install github.com/kevherro/vyx@latest
