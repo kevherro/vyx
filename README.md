@@ -17,6 +17,18 @@ To build and install it:
 
     go install github.com/kevherro/vyx@latest
 
-The binary will be installed `$GOPATH/bin` (`$HOME/go/bin` by default).
+The binary will be installed in `$GOPATH/bin` (`$HOME/go/bin` by default).
 
 # Basic Usage
+
+vyx runs in interactive mode. It accepts interactive discourse:
+
+```
+% ./vyx # Start vyx
+```
+
+This will open a simple shell. Type 'help' for available commands/options.
+
+```
+% (vyx) who am i?
+```

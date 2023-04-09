@@ -39,7 +39,7 @@ done
 
 go vet -all ./...
 if [ "$RUN_GOLANGCI_LINTER" != "false" ];  then
-  golangci-lint run -D errcheck ./...  # TODO: Enable errcheck back.
+  golangci-lint run -D errcheck ./...
 fi
 
 gofmt -s -d .
