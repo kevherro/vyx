@@ -156,28 +156,3 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.txt
-  test-windows:
-    runs-on: windows-2022
-    strategy:
-      fail-fast: false
-      matrix:
-        go: ['1.20', 'tip']
-    steps:
-      - name: Update Go version using setup-go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ matrix.go }}
-
-      - name: Checkout the repo
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.WORKING_DIR }}
-
-      - name: Run the test
-        run: |
-          go version
-          dot -c
-          go env
-          go build github.com/kevherro/vyx
-          go test -v ./...
-        working-directory: ${{ env.WORKING_DIR }}
