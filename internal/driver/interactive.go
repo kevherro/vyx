@@ -15,16 +15,11 @@
 package driver
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
-	"os"
 	"sort"
 	"strings"
 
-	"github.com/kevherro/vyx/internal/api"
 	"github.com/kevherro/vyx/internal/plugin"
 )
 
@@ -112,7 +107,7 @@ func printCurrentOptions(ui plugin.UI) {
 			comment = "[" + strings.Join(values, " | ") + "]"
 		case n == "temperature" && v == "1":
 			comment = "default"
-		case n == "n" && v == "1":
+		case n == "max_tokens" && v == "2147483647":
 			comment = "default"
 		case v == "":
 			// Add quotes for empty values.
@@ -129,58 +124,4 @@ func printCurrentOptions(ui plugin.UI) {
 
 func commandHelp(args string, ui plugin.UI) {
 	ui.Print(args)
-}
-
-const (
-	completionURL = "https://api.openai.com/v1/completions"
-	model         = "text-davinci-003"
-)
-
-func parseTokens(input []string) ([]string, error) {
-	prompt := strings.Join(input, " ")
-	cfg := currentConfig()
-	payload := &api.CompletionRequest{
-		Prompt:      prompt,
-		Model:       model,
-		MaxTokens:   cfg.MaxTokens,
-		Temperature: cfg.Temperature,
-	}
-
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", completionURL, bytes.NewBuffer(jsonData))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("OPENAI_API_KEY")))
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, _ := io.ReadAll(resp.Body)
-
-	var completionResponse api.CompletionResponse
-	err = json.Unmarshal(body, &completionResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(completionResponse.Choices) == 0 {
-		if os.Getenv("OPENAI_API_KEY") == "" {
-			return strings.Fields("vyx: missing OPENAI_API_KEY"), nil
-		}
-		return strings.Fields("vyx: unable to generate a response"), nil
-	}
-	choice := completionResponse.Choices[0]
-	text := choice.Text
-
-	return strings.Fields(text), nil
 }

@@ -16,6 +16,7 @@ package driver
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -30,6 +31,7 @@ type config struct {
 	Output string `json:"-"`
 
 	// OpenAI API options.
+	Endpoint    string  `json:"endpoint,omitempty"`    // The OpenAI endpoint to use.
 	MaxTokens   int     `json:"max_tokens,omitempty"`  // The maximum number of tokens to generate in the completion.
 	Temperature float64 `json:"temperature,omitempty"` // What sampling temperature to use, between 0 and 2.
 }
@@ -97,7 +99,8 @@ func (c *config) set(f configField, value string) error {
 // It is not affected by flags and interactive assignments.
 func defaultConfig() config {
 	return config{
-		MaxTokens:   2048,
+		Endpoint:    "chat",
+		MaxTokens:   math.MaxInt32,
 		Temperature: 1,
 	}
 }
@@ -181,14 +184,17 @@ func init() {
 
 	// choices holds the list of allowed values for config fields that
 	// can take on one of a bounded set of values.
-	choices := map[string][]string{}
+	choices := map[string][]string{
+		"endpoint": {"chat", "completions", "models"},
+	}
 
 	// urlParam holds the mapping from a config field name to the URL
 	// parameter used to hold that config field. If no entry is present
 	// for a name, the corresponding field is not saved in URLs.
 	urlParam := map[string]string{
+		"endpoint":    "endpoint",
 		"max_tokens":  "maxtokens",
-		"temperature": "t",
+		"temperature": "temp",
 	}
 
 	d := defaultConfig()

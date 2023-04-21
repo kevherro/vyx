@@ -12,17 +12,30 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 
-// Package api implements models for the OpenAI API.
-package api
+// Package completions implements the Completions OpenAI endpoint.
+package completions
 
-type CompletionRequest struct {
-	Prompt      string  `json:"prompt"`
-	Model       string  `json:"model"`
-	MaxTokens   int     `json:"max_tokens"`
+const (
+	_ = "POST"
+	_ = "https://api.openai.com/v1/completions"
+)
+
+type Request struct {
+	// ID of the model to use.
+	Model string `json:"model"`
+
+	// The prompt(s) to generate completions for.
+	Prompt string `json:"prompt"`
+
+	// The maximum number of tokens to generate in the completion.
+	// Defaults to 16.
+	MaxTokens int `json:"max_tokens"`
+
+	// What sampling temperature to use, between 0 and 2.
 	Temperature float64 `json:"temperature"`
 }
 
-type CompletionResponse struct {
+type Response struct {
 	ID           string       `json:"id"`
 	Object       string       `json:"object"`
 	CreatedAt    int64        `json:"created_at"`
@@ -32,18 +45,18 @@ type CompletionResponse struct {
 	Conversation Conversation `json:"conversation"`
 }
 
-type Choice struct {
-	Text    string  `json:"text"`
-	Index   int     `json:"index"`
-	LogProb float64 `json:"logproba"`
-}
-
 type Completion struct {
 	ID        string   `json:"id"`
 	CreatedAt int64    `json:"created_at"`
 	Model     string   `json:"model"`
 	Prompt    string   `json:"prompt"`
 	Choices   []Choice `json:"choices"`
+}
+
+type Choice struct {
+	Text    string  `json:"text"`
+	Index   int     `json:"index"`
+	LogProb float64 `json:"logproba"`
 }
 
 type Conversation struct {
